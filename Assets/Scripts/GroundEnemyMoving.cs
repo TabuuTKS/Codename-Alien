@@ -4,7 +4,7 @@ public class GroundEnemyMoving : MonoBehaviour
 {
 
     [SerializeField] float speed = 2f;
-    new Rigidbody2D rigidbody;
+    Rigidbody2D rigidbody;
     float dir = -1f;
     SpriteRenderer spriteRenderer;
 

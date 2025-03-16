@@ -5,7 +5,7 @@ public class StompGuyMovement : MonoBehaviour
 {
     enum StompState { Idle, Down, Up }
     StompState state;
-    new Rigidbody2D rigidbody2D;
+    Rigidbody2D rigidbody2D;
     RaycastHit2D hit2D;
     [SerializeField] float StompSpeed = 2.0f;
     Vector2 initPos;

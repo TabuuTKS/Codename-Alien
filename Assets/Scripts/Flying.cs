@@ -5,7 +5,7 @@ public class Flying : MonoBehaviour
     public float PathSize = 5f;
     float Min, Max;
     [SerializeField] float speed = 2f;
-    new Rigidbody2D rigidbody;
+    Rigidbody2D rigidbody;
     enum flyingState
     {
         UP,
