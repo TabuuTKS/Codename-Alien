@@ -11,7 +11,7 @@ public class Player : MonoBehaviour
 
     private CharacterController2D controller;
     private Animator animator;
-    private new Rigidbody2D rigidbody;
+    private Rigidbody2D rigidbody;
 
     private float xAxis;
     private bool isMoving = false;
@@ -115,8 +115,7 @@ public class Player : MonoBehaviour
     public void DisableMovements()
     {
         animator.enabled = false;
-        Speed = 0;
-        isCrouching = true;
+        rigidbody.constraints = RigidbodyConstraints2D.FreezePosition;
     }
 
     public void HitEnemyUsingJump()

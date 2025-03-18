@@ -9,8 +9,7 @@ public class LevelEvents : MonoBehaviour
     public int PH3_Percentage = 100;
     public int coins = 0;
     public TMP_Text PH3_PercentLabel, CoinsLabel;
-    public bool GameOver = false;
-    public bool win = false;
+    //public bool GameOver = false;
     [SerializeField] GameObject GameOverUI, GameUI, WinUI;
     Player player;
     [SerializeField] AudioSource BGM;
@@ -19,18 +18,20 @@ public class LevelEvents : MonoBehaviour
     void Start()
     {
         StartCoroutine(PH3Breathing());
-        GameOverUI.SetActive(GameOver);
-        GameUI.SetActive(!GameOver);
-        WinUI.SetActive(win);
+        GameOverUI.SetActive(false);
+        GameUI.SetActive(true);
+        WinUI.SetActive(false);
         player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (PH3_Percentage == 0)
+        if (PH3_Percentage <= 0)
         {
-            GameOver = true;
+            PH3_Percentage = 0;
+            StopCoroutine(PH3Breathing());
+            GameOver();
         }
         PH3_PercentLabel.text = PH3_Percentage + "%";
         CoinsLabel.text = coins + "%";
@@ -51,25 +52,25 @@ public class LevelEvents : MonoBehaviour
             Application.Quit();
         #endif
     }
+
+    public void GameOver()
+    {
+        player.Dead();
+        BGM.Stop();
+        GameOverUI.SetActive(true);
+        GameUI.SetActive(false);
+    }
+
+    public void Win()
+    {
+        player.DisableMovements();
+        WinUI.SetActive(true);
+        BGM.Stop();
+        StopCoroutine(PH3Breathing());
+    }
     IEnumerator PH3Breathing()
     {
-        while (!GameOver && PH3_Percentage != 0)
-        {
-            yield return new WaitForSeconds(5);
-            PH3_Percentage--;
-            if (win)
-            {
-                WinUI.SetActive(win);
-                BGM.Stop();
-                break;
-            }
-        }
-        if (GameOver)
-        {
-            player.Dead();
-            BGM.Stop();
-            GameOverUI.SetActive(GameOver);
-            GameUI.SetActive(!GameOver);
-        }
+        yield return new WaitForSeconds(5);
+        PH3_Percentage--;
     }
 }
