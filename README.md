@@ -4,4 +4,7 @@
 <hr>
 <h4>V0.0.1</h4>
 <p>Basic Features with a Demo. (Still Very Much Early)</p>
- 
+
+
+<h4>V0.0.2</h4>
+<p>Added a Falling Death Zone and minor fixes</p>
