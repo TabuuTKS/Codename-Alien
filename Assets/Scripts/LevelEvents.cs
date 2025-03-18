@@ -9,7 +9,7 @@ public class LevelEvents : MonoBehaviour
     public int PH3_Percentage = 100;
     public int coins = 0;
     public TMP_Text PH3_PercentLabel, CoinsLabel;
-    //public bool GameOver = false;
+    bool stopPH3 = false;
     [SerializeField] GameObject GameOverUI, GameUI, WinUI;
     Player player;
     [SerializeField] AudioSource BGM;
@@ -55,6 +55,7 @@ public class LevelEvents : MonoBehaviour
 
     public void GameOver()
     {
+        stopPH3 = true;
         player.Dead();
         BGM.Stop();
         GameOverUI.SetActive(true);
@@ -63,14 +64,18 @@ public class LevelEvents : MonoBehaviour
 
     public void Win()
     {
+        stopPH3 = true;
         player.DisableMovements();
         WinUI.SetActive(true);
+        GameUI.SetActive(false);
         BGM.Stop();
-        StopCoroutine(PH3Breathing());
     }
     IEnumerator PH3Breathing()
     {
-        yield return new WaitForSeconds(5);
-        PH3_Percentage--;
+        while(PH3_Percentage > 0 && !stopPH3)
+        {
+            yield return new WaitForSeconds(5);
+            PH3_Percentage--;
+        }
     }
 }

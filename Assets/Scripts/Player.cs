@@ -15,6 +15,7 @@ public class Player : MonoBehaviour
 
     private float xAxis;
     private bool isMoving = false;
+    private bool canMove = true;
     private bool isJumping = false;
     public bool isCrouching = false;
     public float Health = 100f;
@@ -34,14 +35,14 @@ public class Player : MonoBehaviour
 
     void Update()
     {
-        xAxis = Input.GetAxisRaw("Horizontal");
-        if (Input.GetButtonDown("Jump") && !isCrouching)
+        xAxis = (canMove) ? Input.GetAxisRaw("Horizontal") : 0;
+        if (Input.GetButtonDown("Jump") && !isCrouching && canMove)
         {
             isJumping = true;
             animator.SetTrigger("jump");
             jump.Play();
         }
-        if (Input.GetButtonDown("Crouch"))
+        if (Input.GetButtonDown("Crouch") && canMove)
         {
             isCrouching = true;
         } else if (Input.GetButtonUp("Crouch"))
@@ -110,11 +111,11 @@ public class Player : MonoBehaviour
     public void Dead()
     {
         DisableMovements();
-        animator.SetBool("dead", true);
+        animator.SetBool("dead", canMove);
     }
     public void DisableMovements()
     {
-        animator.enabled = false;
+        canMove = false;
         rigidbody.constraints = RigidbodyConstraints2D.FreezePosition;
     }
 

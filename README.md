@@ -8,3 +8,6 @@
 
 <h4>V0.0.2</h4>
 <p>Added a Falling Death Zone and minor fixes</p>
+
+<h4>V0.0.3</h4>
+<p>Fixed The Bugs came in V0.0.2</p>
