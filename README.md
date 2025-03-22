@@ -11,3 +11,6 @@
 
 <h4>V0.0.3</h4>
 <p>Fixed The Bugs came in V0.0.2</p>
+
+<h4>V0.0.4</h4>
+<p>Massive UI Changes with a Start Menu and Dailogue System</p>

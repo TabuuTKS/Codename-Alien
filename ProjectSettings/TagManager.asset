@@ -7,6 +7,8 @@ TagManager:
   - Ground
   - OBs
   - Event
+  - PressE
+  - Dailogue
   layers:
   - Default
   - TransparentFX

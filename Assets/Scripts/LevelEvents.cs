@@ -10,23 +10,33 @@ public class LevelEvents : MonoBehaviour
     public int coins = 0;
     public TMP_Text PH3_PercentLabel, CoinsLabel;
     bool stopPH3 = false;
-    [SerializeField] GameObject GameOverUI, GameUI, WinUI;
+    [SerializeField] GameObject GameOverUI, GameUI, WinUI, PauseUI;
     Player player;
     [SerializeField] AudioSource BGM;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        // make sure that game isn't paused while switching scenes
+        Time.timeScale = 1;
+
         StartCoroutine(PH3Breathing());
         GameOverUI.SetActive(false);
         GameUI.SetActive(true);
         WinUI.SetActive(false);
+        PauseUI.SetActive(false);
         player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
     }
 
     // Update is called once per frame
     void Update()
     {
+
+        if (Input.GetKey(KeyCode.P) && !GameOverUI.activeSelf && !WinUI.activeSelf)
+        {
+            PauseGame();
+        }
+
         if (PH3_Percentage <= 0)
         {
             PH3_Percentage = 0;
@@ -42,15 +52,9 @@ public class LevelEvents : MonoBehaviour
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
-    public void quit()
+    public void BackToMenu()
     {
-        #if UNITY_EDITOR
-            // Simulates quitting the game in the Editor
-            UnityEditor.EditorApplication.isPlaying = false;
-        #else
-            // Quits the application when built
-            Application.Quit();
-        #endif
+        SceneManager.LoadScene("MainMenu");
     }
 
     public void GameOver()
@@ -60,6 +64,22 @@ public class LevelEvents : MonoBehaviour
         BGM.Stop();
         GameOverUI.SetActive(true);
         GameUI.SetActive(false);
+    }
+
+    public void PauseGame()
+    {
+        BGM.Pause();
+        PauseUI.SetActive(true);
+        GameUI.SetActive(false);
+        Time.timeScale = 0;
+    }
+
+    public void ResumeGame()
+    {
+        BGM.Play();
+        PauseUI.SetActive(false);
+        GameUI.SetActive(true);
+        Time.timeScale = 1;
     }
 
     public void Win()
