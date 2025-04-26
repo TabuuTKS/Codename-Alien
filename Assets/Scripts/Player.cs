@@ -1,12 +1,16 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.Rendering;
+using UnityEngine.InputSystem;
 
 public class Player : MonoBehaviour
 {
     [SerializeField] float Speed = 40f;
     [SerializeField] AudioSource walk, run, jump, hurt;
     [SerializeField] LevelEvents levelEvents;
+
+    //this access the Inputs file which has all inputs set.
+    public Inputs inputs;
     public AudioSource coin;
 
     private CharacterController2D controller;
@@ -24,31 +28,47 @@ public class Player : MonoBehaviour
     private float HurtStrengthX = 1500f;
     private float HurtStrengthY = 100f;
     private float bounceStrength = 500f;
+    
     void Start()
     {
-        controller = GetComponent<CharacterController2D>();
         animator = GetComponent<Animator>();
         rigidbody = GetComponent<Rigidbody2D>();
         walk.Stop();
         run.Stop();
     }
 
+    private void Awake() {
+        //to use new input system. its best to use input object and controller in awake.
+        inputs = new Inputs();
+        controller = GetComponent<CharacterController2D>();
+    }
+
+    private void OnEnable()
+    {
+        /*
+            here += are used to add functionality to actions of new input system.
+            ctx is a context which has some action properties. is used to assign function.
+            and => finallay assign the function short handly.
+        */
+        inputs.Player.Move.performed += ctx => xAxis = ctx.ReadValue<float>();
+        inputs.Player.Move.canceled += ctx => xAxis = 0;
+        inputs.Player.Jump.performed += ctx => isJumping = true;
+        inputs.Player.Crouch.performed += ctx => isCrouching = true;
+        inputs.Player.Crouch.canceled += ctx => isCrouching = false;
+        inputs.Player.Enable();
+    }
+    private void OnDisable()
+    {
+        inputs.Player.Disable();
+    }
+
+    public void SetXAxis(float value) => xAxis = value;
+    public void TriggerJump() => isJumping = true;
+    public void setCrouch(bool value) => isCrouching = value; 
+    
     void Update()
     {
-        xAxis = (canMove) ? Input.GetAxisRaw("Horizontal") : 0;
-        if (Input.GetButtonDown("Jump") && !isCrouching && canMove)
-        {
-            isJumping = true;
-            animator.SetTrigger("jump");
-            jump.Play();
-        }
-        if (Input.GetButtonDown("Crouch") && canMove)
-        {
-            isCrouching = true;
-        } else if (Input.GetButtonUp("Crouch"))
-        {
-            isCrouching = false;
-        }
+        PlayerInput();
         Audio();
         Animate();
 
@@ -58,6 +78,18 @@ public class Player : MonoBehaviour
         {
             Hurt();
         }*/
+    }
+
+    void PlayerInput() {
+        if (isJumping && !isCrouching && canMove)
+        {
+            animator.SetTrigger("jump");
+            jump.Play();
+        }
+        if (isCrouching && canMove)
+        {
+            isJumping = false;
+        }
     }
 
     void Animate()
@@ -85,6 +117,13 @@ public class Player : MonoBehaviour
             run.Pause();
             walk.Pause();
         }
+    }
+
+    public void GravitySwitching() {
+        controller.m_JumpForce *= -1;
+        rigidbody.gravityScale *= (-1);
+        transform.Rotate(new Vector3(0,0,180));
+        transform.localScale = new Vector3(transform.localScale.x * (-1), transform.localScale.y, transform.localScale.z);
     }
     private void FixedUpdate()
     {
@@ -121,6 +160,6 @@ public class Player : MonoBehaviour
 
     public void HitEnemyUsingJump()
     {
-        rigidbody.AddForceY(bounceStrength);
+        rigidbody.AddForceY(bounceStrength * rigidbody.gravityScale);
     }
 }

@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.UI;
 
 public class StompGuyMovement : MonoBehaviour
 {
@@ -26,19 +25,8 @@ public class StompGuyMovement : MonoBehaviour
     private void FixedUpdate()
     {
         Move();
+        DetectPlayer();
 
-        // Raycast to detect the player
-        hit2D = Physics2D.Raycast(transform.position, Vector2.down, RaycastLenght, PlayerMask);
-        if (hit2D && hit2D.collider.CompareTag("Player") && !(state == StompState.Up) && !player.isCrouching)
-        {
-            state = StompState.Down;
-        }
-
-        // Check if object has reached initPos to reset state
-        if (Vector2.Distance(rigidbody2D.position, initPos) < 0.1f && state == StompState.Up)
-        {
-            state = StompState.Idle;
-        }
     }
 
     void Move()
@@ -57,6 +45,21 @@ public class StompGuyMovement : MonoBehaviour
             case StompState.Up:
                 rigidbody2D.linearVelocity = new Vector2(0, (StompSpeed/2));
                 break;
+        }
+    }
+
+    void DetectPlayer() {
+        // Raycast to detect the player
+        hit2D = Physics2D.Raycast(transform.position, Vector2.down, RaycastLenght, PlayerMask);
+        if (hit2D && hit2D.collider.CompareTag("Player") && !(state == StompState.Up) && !player.isCrouching)
+        {
+            state = StompState.Down;
+        }
+
+        // Check if object has reached initPos to reset state
+        if (Vector2.Distance(rigidbody2D.position, initPos) < 0.1f && state == StompState.Up)
+        {
+            state = StompState.Idle;
         }
     }
 

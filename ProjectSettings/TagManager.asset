@@ -9,6 +9,7 @@ TagManager:
   - Event
   - PressE
   - Dailogue
+  - Enemy
   layers:
   - Default
   - TransparentFX

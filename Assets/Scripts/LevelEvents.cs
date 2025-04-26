@@ -7,24 +7,26 @@ public class LevelEvents : MonoBehaviour
 {
 
     public int PH3_Percentage = 100;
-    public int coins = 0;
-    public TMP_Text PH3_PercentLabel, CoinsLabel;
+    public TMP_Text PH3_PercentLabel, CoinsLabel, KeyLabel;
     bool stopPH3 = false;
-    [SerializeField] GameObject GameOverUI, GameUI, WinUI, PauseUI;
+    [SerializeField] GameObject GameOverUI, GameUI, WinUI, PauseUI, KeyUI, MobileUI, DailogueUI;
     Player player;
     [SerializeField] AudioSource BGM;
 
+    public bool MobilePort = true;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         // make sure that game isn't paused while switching scenes
         Time.timeScale = 1;
-
+        PlayerPrefs.coins = 0;
         StartCoroutine(PH3Breathing());
         GameOverUI.SetActive(false);
         GameUI.SetActive(true);
         WinUI.SetActive(false);
         PauseUI.SetActive(false);
+        KeyUI.SetActive(false);
+        MobileUI.SetActive(MobilePort);
         player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
     }
 
@@ -43,8 +45,37 @@ public class LevelEvents : MonoBehaviour
             StopCoroutine(PH3Breathing());
             GameOver();
         }
+        UpdateUI();
+        MobileUIUpdate();
+    }
+
+    private void UpdateUI() {
         PH3_PercentLabel.text = PH3_Percentage + "%";
-        CoinsLabel.text = coins + "%";
+        CoinsLabel.text = PlayerPrefs.coins + "%";
+        if (PlayerPrefs.keys > 0)
+        {
+            KeyUI.SetActive(true);
+            KeyLabel.text = $"{PlayerPrefs.keys}";
+        }
+        else {
+            KeyUI.SetActive(false);
+        }
+    }
+
+    private void MobileUIUpdate() {
+        if (MobilePort)
+        {
+            if (PauseUI.activeSelf || DailogueUI.activeSelf || WinUI.activeSelf)
+            {
+                MobileUI.SetActive(false);
+            }
+            else {
+                MobileUI.SetActive(true);
+            }
+        }
+        else {
+            MobileUI.SetActive(false);
+        }
     }
 
     public void Restart()

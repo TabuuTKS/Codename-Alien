@@ -32,7 +32,7 @@ public class DailogueManager : MonoBehaviour
         }
         DisplayNextSentence();
     }
-    void DisplayNextSentence()
+    public void DisplayNextSentence()
     {
         if (Sentences.Count == 0)
         {
