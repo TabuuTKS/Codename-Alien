@@ -72,6 +72,11 @@ public class Player : MonoBehaviour
         Audio();
         Animate();
 
+        if (levelEvents.MobilePort && Time.timeScale == 0)
+        {
+            xAxis = 0;
+        }
+
         //Debug Hurt
         /*
         if (Input.GetKeyDown(KeyCode.Space))
@@ -102,7 +107,7 @@ public class Player : MonoBehaviour
 
     private void Audio()
     {
-        if (xAxis != 0f && controller.m_Grounded) {
+        if (xAxis != 0f && controller.m_Grounded && Time.timeScale != 0) {
             if (!run.isPlaying && !isCrouching)
             {
                 run.Play();

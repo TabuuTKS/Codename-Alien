@@ -4,6 +4,11 @@ using UnityEngine.SceneManagement;
 public class MainMenuEvents : MonoBehaviour
 {
     [SerializeField] GameObject StartUI, LevelSelectUI;
+
+    private void Start()
+    {
+        Application.targetFrameRate = 60;
+    }
     public void StartGame()
     {
         StartUI.SetActive(false);
