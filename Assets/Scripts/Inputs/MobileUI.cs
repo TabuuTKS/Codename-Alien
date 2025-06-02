@@ -7,8 +7,9 @@ public class MobileUI : MonoBehaviour
     [SerializeField] GameObject DailogueUI;
     [SerializeField] GameObject LeftBTN, RightBTN, JumpBTN, CrouchBTN;
 
-    private void Update()
+    private void FixedUpdate()
     {
+        QualitySettings.maxQueuedFrames = 1;
         if (DailogueUI.activeSelf)
         {
             LeftBTN.GetComponent<Button>().interactable = false;
