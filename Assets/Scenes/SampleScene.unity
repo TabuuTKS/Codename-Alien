@@ -9992,7 +9992,7 @@ MonoBehaviour:
   MobileUI: {fileID: 798024714}
   DailogueUI: {fileID: 1042460117}
   BGM: {fileID: 1140210955}
-  MobilePort: 1
+  MobilePort: 0
 --- !u!114 &550399779
 MonoBehaviour:
   m_ObjectHideFlags: 0
